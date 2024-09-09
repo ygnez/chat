@@ -26,4 +26,13 @@ router.post("/profiles", async (req: Request, res: Response) => {
   });
 });
 
+router.get("/users", async (req: Request, res: Response) => {
+  const users = [];
+
+  res.status(200).json({
+    items: users,
+    totalCount: users.length,
+  });
+});
+
 export default router;
