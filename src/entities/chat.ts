@@ -1,9 +1,10 @@
 import { Message } from "./message";
-import { Profile } from "./profile";
+import { User } from "./user";
 
 export class Chat {
-  id: string;
+  uuid: string;
   messages: Message[];
-  createdBy: Profile;
+  participants: User[];
+  createdBy: User;
   createdAt: Date;
 }

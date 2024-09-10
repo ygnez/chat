@@ -2,7 +2,7 @@ import { Profile } from "./profile";
 import { Chat } from "./chat";
 
 export class Message {
-  id: string;
+  uuid: string;
   chat: Chat;
   text: string;
   format: string;

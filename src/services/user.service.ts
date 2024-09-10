@@ -16,7 +16,7 @@ export class UserService {
     });
 
     this.users.add({
-      uuid: randomUUID(),
+      uuid: "5bb0cf93-d3eb-41f7-927b-b005ee008cc5",
       username: "receiver",
       firstName: "Receiver",
       lastName: "Last Name",
@@ -30,4 +30,22 @@ export class UserService {
       return user.token === token;
     });
   }
+
+  async findUserById(userId: string) {
+    return [...this.users].find((user) => {
+      return user.uuid === userId;
+    });
+  }
+
+  async findAll() {
+    return [...this.users];
+  }
+
+  updateStatus(user: User, status: UserStatus) {
+    if (this.users.has(user)) {
+      user.status = status;
+    }
+  }
 }
+
+export const userService = new UserService();

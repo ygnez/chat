@@ -5,7 +5,7 @@ export enum ProfileStatus {
 }
 
 export class Profile {
-  id: number;
+  uuid: number;
   username: string;
   status: ProfileStatus;
   metadata: Record<string, any>;
