@@ -1,6 +1,7 @@
-export type Constructable<T = any> = new (...args: any[]) => T;
-export type Token<T = any> = Constructable<T>;
 import "reflect-metadata";
+
+export type Constructable<T = any> = { new (...args: any[]): T };
+export type Token<T = any> = Constructable<T>;
 
 class Container {
   private readonly deps: Map<Constructable, any> = new Map<
@@ -15,6 +16,13 @@ class Container {
       const instance = this.resolve<T>(token);
       this.deps.set(token, instance);
     }
+
+    const instance = this.deps.get(token);
+    if (instance) {
+      return instance;
+    }
+
+    return this.resolve(token);
   }
 
   resolve<T = any>(token: Token<T>): T {
@@ -27,12 +35,15 @@ class Container {
     const constructorParamInstances: any[] = [];
     for (const i in constructorParamTypes) {
       let injectToken: Token = constructorParamTypes[i];
-      if (injectTokens) {
+
+      if (!injectToken) {
         injectToken = injectTokens[i] || injectToken;
       }
+
       if (!injectToken) {
         throw `Cannot resolve dependency of ${token} at index ${i}`;
       }
+
       constructorParamInstances.push(this.get(injectToken));
     }
 

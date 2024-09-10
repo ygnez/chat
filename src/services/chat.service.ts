@@ -1,6 +1,7 @@
-import { Chat, User } from "../entities";
 import { randomUUID } from "crypto";
-import { Injectable } from "../di/injectable.decorator";
+
+import { Chat, User } from "../entities";
+import { Injectable } from "../decorators";
 
 @Injectable()
 export class ChatService {
@@ -36,5 +37,3 @@ export class ChatService {
     return [...this.chats];
   }
 }
-
-export const chatService = new ChatService();

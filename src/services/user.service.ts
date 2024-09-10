@@ -1,7 +1,7 @@
 import { randomUUID } from "crypto";
 
 import { User, UserStatus } from "../entities";
-import { Injectable } from "../di/injectable.decorator";
+import { Injectable } from "../decorators";
 
 @Injectable()
 export class UserService {
@@ -49,5 +49,3 @@ export class UserService {
     }
   }
 }
-
-export const userService = new UserService();
