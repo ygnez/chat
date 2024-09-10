@@ -2,11 +2,12 @@ import { Request, Response } from "express";
 
 import { UserService } from "./user.service";
 import { ChatService } from "./chat.service";
+import { Inject } from "../di/inject.decorator";
 
 export class ApiService {
   constructor(
-    private readonly userService: UserService,
-    private readonly chatService: ChatService
+    @Inject() private readonly userService: UserService,
+    @Inject() private readonly chatService: ChatService
   ) {}
 
   async getUsers(req: Request, res: Response) {

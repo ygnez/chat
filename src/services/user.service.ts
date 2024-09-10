@@ -1,7 +1,9 @@
 import { randomUUID } from "crypto";
 
 import { User, UserStatus } from "../entities";
+import { Injectable } from "../di/injectable.decorator";
 
+@Injectable()
 export class UserService {
   private users: Set<User> = new Set<User>();
 

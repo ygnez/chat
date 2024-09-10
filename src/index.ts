@@ -12,6 +12,7 @@ import {
 } from "./events";
 import { ApiService, ChatService, EventService, UserService } from "./services";
 import { Chat, UserStatus } from "./entities";
+import { DependencyContainer } from "./di/dependency.container";
 
 const app = express();
 const httpServer = createServer(app);
@@ -28,6 +29,10 @@ const apiService = new ApiService(userService, chatService);
 
 app.use(express.json());
 app.use("/", apiRoutes);
+
+DependencyContainer.register(ApiService);
+const resolved = DependencyContainer.resolve(ApiService);
+console.log(resolved);
 
 io.use((socket, next) => {
   const token = socket.handshake.headers.token as string;

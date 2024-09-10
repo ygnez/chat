@@ -1,6 +1,8 @@
 import { Chat, User } from "../entities";
 import { randomUUID } from "crypto";
+import { Injectable } from "../di/injectable.decorator";
 
+@Injectable()
 export class ChatService {
   private chats: Set<Chat> = new Set<Chat>();
 
