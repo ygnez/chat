@@ -4,10 +4,7 @@ export type Constructable<T = any> = { new (...args: any[]): T };
 export type Token<T = any> = Constructable<T>;
 
 class Container {
-  private readonly deps: Map<Constructable, any> = new Map<
-    Constructable,
-    any
-  >();
+  private readonly deps: Map<Token, any> = new Map<Token, any>();
 
   get<T = any>(token: Token<T>) {
     const dep: Constructable<T> | undefined = this.deps.get(token);
@@ -34,17 +31,15 @@ class Container {
 
     const constructorParamInstances: any[] = [];
     for (const i in constructorParamTypes) {
-      let injectToken: Token = constructorParamTypes[i];
-
-      if (!injectToken) {
-        injectToken = injectTokens[i] || injectToken;
-      }
+      const injectToken: Token = constructorParamTypes[i];
 
       if (!injectToken) {
         throw `Cannot resolve dependency of ${token} at index ${i}`;
       }
 
-      constructorParamInstances.push(this.get(injectToken));
+      if (injectTokens[i] && injectToken === injectTokens[i]) {
+        constructorParamInstances.push(this.get(injectToken));
+      }
     }
 
     return new token(...constructorParamInstances);

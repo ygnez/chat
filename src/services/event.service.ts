@@ -11,6 +11,8 @@ export class EventService {
     private readonly socket: Socket
   ) {}
 
+  async onConnect(clientId: string) {}
+
   async onPostMessage(message: Message) {}
 
   async onReadMessage(messageId: string) {}
