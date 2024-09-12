@@ -1,0 +1,90 @@
+@startuml
+
+autonumber
+
+actor Client as C
+actor Agent as A
+
+participant "API Gateway" as API
+participant "Event Handlers" as E
+
+control "Context" as X
+control "ClientService" as CS
+control "ChatService" as HS
+control "MessageService" as MS
+control "AgentService" as AS
+
+== Инициализация чата ==
+
+C -> API++: Открыл чат
+API -> X++: Передача метаданных\nпользователя
+
+X -> CS++: Проверяем наличие клиента
+alt Клиент не найден
+  CS -> CS: Создать клиента
+end
+CS --> X--: Данные о клиенте
+
+X -> HS++: Получение данных\nо чате клиента
+alt Был ли чат у данного клиента
+  HS -> HS: Создать чат
+end
+HS --> X--: Данные о чате
+
+X -> AS++: Найди свободного агента
+AS --> X--: Ответ
+
+alt Есть свободный агент
+  X -> CS++: Добавить агента в чат
+  CS --> X--: Статус операции
+else Нет агентов
+  X -> X: Инициация процесса\nпоиска свободного агента
+end
+
+X --> API--: Результат инициализации
+API --> C--
+
+== Отправка сообщения клиента ==
+
+C -> E++: Отправка сообщения\n""sendMessage""
+
+E -> X++: Данные сообщения и чата
+
+X -> CS++: Проверить наличие клиента
+CS --> X--: Результат
+
+X -> HS++: Проверить доступность чата
+HS --> X--: Результат\n""Chat,Agent""
+
+break Чат недоступен или клиент не существует
+  X --> E: << Exception >>
+  E -> C: Отправить сообщение\nс ошибкой\n""error""
+end
+
+X -> MS++: Создать новое сообщение в чате
+MS --> X--
+
+X ->> E: Сообщение успешно доставлено\n""Message""
+E ->> C: ""messageDelivered""
+
+loop Несколько попыток или ограничение по времени
+  X ->> E: Отправить новое\nсообщение агенту\n""Message""
+  E ->> A: ""newMessage""
+end
+
+... n сек. ...
+
+A -> E: Агент прочитал сообщение\n""readMessages""
+E -> X
+X -> MS++: Сменить статус сообщения
+MS --> X--: ""Chat,Client""
+
+loop Несколько попыток или ограничение по времени
+  X ->> E: Отправить участникам\nуведомление о прочтении
+  E ->> C: ""messagesRead""
+end
+
+deactivate X
+deactivate E
+
+@enduml
