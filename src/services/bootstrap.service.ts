@@ -1,5 +1,5 @@
 import express, { Application } from "express";
-import { createServer, Server } from "http";
+import { createServer, Server as HttpServer } from "http";
 import { Server as WsServer } from "socket.io";
 
 import {
@@ -18,7 +18,7 @@ import { Chat, UserStatus } from "../entities";
 
 export class BootstrapService {
   private app: Application;
-  private http: Server;
+  private http: HttpServer;
   private ws: WsServer<
     ClientToServerEvents,
     ServerToClientEvents,
